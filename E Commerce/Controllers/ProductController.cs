@@ -34,15 +34,10 @@ namespace E_Commerce.Controllers
         [HttpGet("GetById/{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            try
-            {
-                var p = await _services.GetProductById(id);
-                return Ok(p);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+        
+            var p = await _services.GetProductById(id);
+            return Ok(p);
+
         }
         [HttpGet("getByCategory")]
         public async Task<IActionResult> GetByCategory(string categoryName)
