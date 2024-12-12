@@ -8,11 +8,18 @@ using Microsoft.IdentityModel.Tokens;
 using E_Commerce.Mapping;
 using System.Text;
 using E_Commerce.Helpers;
-using E_Commerce.Services;
 using Microsoft.OpenApi.Models;
 using E_Commerce.Middlewares;
 using E_Commerce.Services.CartServices;
 using E_Commerce.Services.CloudinaryServices;
+using E_Commerce.Services.AddressServices;
+using E_Commerce.Services.AuthServices;
+using E_Commerce.Services.CategoryServices;
+using E_Commerce.Services.ProductServices;
+using E_Commerce.Services.UserServices;
+using E_Commerce.Services.WishListServices;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using E_Commerce.Services.OrderServices;
 
 namespace E_Commerce
 {
@@ -34,6 +41,9 @@ namespace E_Commerce
             builder.Services.AddScoped<IWishListService, WishListService>();
             builder.Services.AddScoped<ICartService,CartService>();
             builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+            builder.Services.AddScoped<IProductService,ProductService>();
+            builder.Services.AddScoped<IAddressService, AddressService>();
+            builder.Services.AddScoped<IOrderService, OrderService>();
 
             builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
             builder.Services.AddScoped<IJwtHelper, JwtHelper>();
@@ -100,6 +110,9 @@ namespace E_Commerce
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             app.UseMiddleware<UserContextMiddleware>();
 
             app.MapControllers();

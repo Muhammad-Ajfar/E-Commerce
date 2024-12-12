@@ -4,6 +4,7 @@ using E_Commerce.Helpers;
 using E_Commerce.Models;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace E_Commerce.Services.CartServices
@@ -49,7 +50,7 @@ namespace E_Commerce.Services.CartServices
 
         }
 
-        public async Task<ApiResponses<CartItem>> AddToCart(Guid userId, Guid productId)
+        public async Task<ApiResponses<CartViewDTO>> AddToCart(Guid userId, Guid productId)
         {
             try
             {
@@ -60,7 +61,7 @@ namespace E_Commerce.Services.CartServices
 
                 if (user == null)
                 {
-                    return new ApiResponses<CartItem>(404, "User not found");
+                    return new ApiResponses<CartViewDTO>(404, "User not found");
                 }
 
                 if (user.Cart == null)
@@ -70,34 +71,58 @@ namespace E_Commerce.Services.CartServices
                     await _context.SaveChangesAsync();
                 }
 
-                var check = user.Cart?.CartItems?.FirstOrDefault(ci => ci.ProductId == productId);
-                if (check != null)
-                {
-                    return new ApiResponses<CartItem>(409, "Product already in cart");
-                }
+                var item = user.Cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
 
                 var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
-                if (product?.Stock <= 0)
+                if (product == null || product.Stock <= 0)
                 {
-                    return new ApiResponses<CartItem>(404, "Out of Stock");
+                    return new ApiResponses<CartViewDTO>(404, "Product not found or out of stock");
                 }
 
-                var item = new CartItem
+                if (item != null)
                 {
-                    CartId = user.Cart.Id,
-                    ProductId = productId,
-                    Quantity = 1
+                    if (item.Quantity >= 10)
+                    {
+                        return new ApiResponses<CartViewDTO>(400, "Maximum quantity reached (10 items)");
+                    }
+
+                    if (product.Stock <= item.Quantity)
+                    {
+                        return new ApiResponses<CartViewDTO>(400, "Out of stock");
+                    }
+
+                    item.Quantity++;
+                }
+                else
+                {
+                    item = new CartItem
+                    {
+                        CartId = user.Cart.Id,
+                        ProductId = productId,
+                        Quantity = 1
+                    };
+                    await _context.CartItems.AddAsync(item);
+                }
+
+                await _context.SaveChangesAsync();
+
+                var itemview = new CartViewDTO
+                {
+                    ProductId = item.ProductId,
+                    ProductName = item.Product.Name,
+                    ProductImage = item.Product.Image,
+                    Price = item.Product.Price,
+                    Quantity = item.Quantity,
+                    TotalAmount = item.Product.Price * item.Quantity
                 };
-
-                return new ApiResponses<CartItem>(200, "Successfully added to cart");
-
+                return new ApiResponses<CartViewDTO>(200, "Successfully added to cart or quantity increased", itemview);
             }
-
             catch (Exception ex)
             {
-                return new ApiResponses<CartItem>(500, "Internal server error", null, ex.Message);
+                return new ApiResponses<CartViewDTO>(500, "Internal server error", null, ex.Message);
             }
         }
+
 
         public async Task<bool> RemoveFromCart( Guid userId, Guid productId )
         {
@@ -202,7 +227,7 @@ namespace E_Commerce.Services.CartServices
                 }
                 else
                 {
-                    item.Quantity = 1;
+                    user.Cart.CartItems.Remove(item);
                 }
                 await _context.SaveChangesAsync();
                 return true;

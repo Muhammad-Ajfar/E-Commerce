@@ -26,9 +26,7 @@ namespace E_Commerce.DTOs
         public decimal Price { get; set; }
 
 
-        [Required(ErrorMessage = "Category Name is required.")]
-        [StringLength(50, ErrorMessage = "Category Name must not exceed 50 characters.")]
-        public string CategoryName { get; set; }
-
+        [Required(ErrorMessage = "Category Id is required.")]
+        public int CategoryId { get; set; }
     }
 }

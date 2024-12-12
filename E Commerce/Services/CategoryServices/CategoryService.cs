@@ -4,14 +4,8 @@ using E_Commerce.DTOs;
 using E_Commerce.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Services
+namespace E_Commerce.Services.CategoryServices
 {
-    public interface ICategoryService
-    {
-        Task<List<CategoryDto>> GetCategories();
-        Task<bool> AddCategory(CategoryDto categoryDto);
-        Task<bool> RemoveCategory(int id);
-    }
 
     public class CategoryService : ICategoryService
     {
@@ -21,7 +15,7 @@ namespace E_Commerce.Services
         public CategoryService(AppDbContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;     
+            _mapper = mapper;
         }
 
         public async Task<List<CategoryDto>> GetCategories()

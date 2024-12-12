@@ -4,13 +4,8 @@ using E_Commerce.DTOs;
 using E_Commerce.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Services
+namespace E_Commerce.Services.WishListServices
 {
-    public interface IWishListService
-    {
-        Task<string> AddOrRemove(Guid userId, Guid productId);
-        Task<List<WishListViewDTO>> GetWishList(Guid userId);
-    }
 
     public class WishListService : IWishListService
     {
@@ -25,6 +20,11 @@ namespace E_Commerce.Services
 
         public async Task<string> AddOrRemove(Guid userId, Guid productId)
         {
+            var prod = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId);
+            if(prod == null)
+            {
+                return "Product not found";
+            }
             var isExist = await _context.WishLists.Include(w => w.Product).FirstOrDefaultAsync(w => w.ProductId == productId && w.UserId == userId);
             if (isExist == null)
             {
@@ -51,7 +51,7 @@ namespace E_Commerce.Services
         {
             try
             {
-                var items =await _context.WishLists.Include(w => w.Product).ThenInclude(p => p.Category)
+                var items = await _context.WishLists.Include(w => w.Product).ThenInclude(p => p.Category)
                     .Where(w => w.UserId == userId).ToListAsync();
 
                 if (items != null)

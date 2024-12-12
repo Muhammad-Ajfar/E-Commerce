@@ -1,6 +1,7 @@
 ﻿using E_Commerce.DTOs;
 using E_Commerce.Models;
 using E_Commerce.Services;
+using E_Commerce.Services.ProductServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,10 @@ namespace E_Commerce.Controllers
         {
         
             var p = await _services.GetProductById(id);
+            if(p == null)
+            {
+                return NotFound("Product not found");
+            }
             return Ok(p);
 
         }
@@ -54,7 +59,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
             try
@@ -73,7 +78,7 @@ namespace E_Commerce.Controllers
             }
         }
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("Add")]
         public async Task<IActionResult> AddProduct([FromForm] ProductDTO productDto, IFormFile image)
         {
@@ -94,7 +99,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPut("UpdateProduct/{id}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProduct(Guid id, [FromForm] ProductDTO productDto, IFormFile image)
         {
             try

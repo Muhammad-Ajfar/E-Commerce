@@ -1,5 +1,6 @@
 ﻿using E_Commerce.DTOs;
 using E_Commerce.Services;
+using E_Commerce.Services.CategoryServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +41,7 @@ namespace E_Commerce.Controllers
                 var res = await _categoryService.AddCategory(categoryDto);
                 if (res)
                 {
-                    return Ok("Category successfully added");
+                    return Ok("Category added successfully");
                 }
                 return Conflict("The category already exist");
 
@@ -60,9 +61,9 @@ namespace E_Commerce.Controllers
                 var res = await _categoryService.RemoveCategory(id);
                 if (res)
                 {
-                    return Ok("Category deleted succedully");
+                    return Ok("Category deleted successfully");
                 }
-                return NotFound("Category Not found");
+                return NotFound("Category not found");
             }
             catch (Exception ex)
             {

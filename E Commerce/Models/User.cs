@@ -25,6 +25,8 @@ namespace E_Commerce.Models
 
         public ICollection<Address> Addresses { get; set; }
         public ICollection<WishList> WishLists { get; set; }
+        public ICollection<Order> Orders { get; set; }
+
     }
 
 

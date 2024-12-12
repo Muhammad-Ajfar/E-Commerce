@@ -22,7 +22,7 @@ namespace E_Commerce.Models
         public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         [Required]
-        public string Status { get; set; }
+        public string Status { get; set; } = "Placed";
 
         public ICollection<OrderItem> OrderItems { get; set; }
     }

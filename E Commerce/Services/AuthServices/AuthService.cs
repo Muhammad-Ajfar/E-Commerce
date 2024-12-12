@@ -7,13 +7,8 @@ using E_Commerce.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Services
+namespace E_Commerce.Services.AuthServices
 {
-    public interface IAuthService
-    {
-        Task<ServiceResponse<UserResponseDTO>> RegisterUserAsync(RegisterUserDTO registerUserDTO);
-        Task<ServiceResponse<string>> LoginUserAsync(LoginUserDTO loginUserDTO);
-    }
 
     public class AuthService : IAuthService
     {
@@ -95,8 +90,8 @@ namespace E_Commerce.Services
                 };
             }
 
-                // Generate JWT token
-                var token = _jwtHelper.GenerateToken(user);
+            // Generate JWT token
+            var token = _jwtHelper.GenerateToken(user);
 
             return new ServiceResponse<string>
             {

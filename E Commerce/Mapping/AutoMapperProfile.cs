@@ -20,6 +20,17 @@ namespace E_Commerce.Mapping
 
             CreateMap<WishList, WishListDTO>().ReverseMap();
 
+            CreateMap<Order, OrderGetDTO>()
+                .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems));
+
+            CreateMap<OrderCreateDTO, Order>();
+
+            CreateMap<OrderItem, OrderItemGetDTO>();
+
+
+            CreateMap<Address, AddressDTO>();
+            CreateMap<AddressCreateDTO, Address>();
+
         }
     }
 }

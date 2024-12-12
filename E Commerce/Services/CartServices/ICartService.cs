@@ -7,7 +7,7 @@ namespace E_Commerce.Services.CartServices
     public interface ICartService
     {
         Task<List<CartViewDTO>> GetCartItems(Guid userId);
-        Task<ApiResponses<CartItem>> AddToCart(Guid userId, Guid productId);
+        Task<ApiResponses<CartViewDTO>> AddToCart(Guid userId, Guid productId);
         Task<bool> RemoveFromCart(Guid userId, Guid productId);
         Task<ApiResponses<CartItem>> IncreaseQuantity(Guid userId, Guid productId);
         Task<bool> DecreaseQuantity(Guid userId, Guid productId);

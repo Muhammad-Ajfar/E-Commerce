@@ -4,6 +4,7 @@ using E_Commerce.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using E_Commerce.Services.WishListServices;
 
 namespace E_Commerce.Controllers
 {

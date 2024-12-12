@@ -1,5 +1,6 @@
 ﻿using E_Commerce.DTOs;
 using E_Commerce.Services;
+using E_Commerce.Services.AuthServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

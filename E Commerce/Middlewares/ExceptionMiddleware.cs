@@ -46,7 +46,7 @@
                 exception.StackTrace // Optional: Remove in production.
             );
 
-            return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+            return context.Response.WriteAsync( JsonSerializer.Serialize(response));
         }
     }
 

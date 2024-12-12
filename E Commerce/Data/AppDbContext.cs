@@ -55,6 +55,12 @@ namespace E_Commerce.Data
                 .HasForeignKey<Cart>(c => c.UserId);
 
             modelBuilder.Entity<User>()
+                .HasMany(u => u.Orders)
+                .WithOne(o => o.User)
+                .HasForeignKey(o => o.UserId);
+
+
+            modelBuilder.Entity<User>()
                 .HasIndex(u => u.Email)
                 .IsUnique();
         }
@@ -115,7 +121,7 @@ namespace E_Commerce.Data
         {
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.User)
-                .WithMany()
+                .WithMany(u => u.Orders)
                 .HasForeignKey(o => o.UserId);
 
             modelBuilder.Entity<Order>()

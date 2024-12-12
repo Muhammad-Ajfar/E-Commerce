@@ -4,15 +4,8 @@ using E_Commerce.DTOs;
 using E_Commerce.Helpers;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Services
+namespace E_Commerce.Services.UserServices
 {
-    public interface IUserService
-    {
-        Task<List<UserViewDTO>> GetUsers();
-        Task<BlockUnblockResponse> BlockAndUnblock(Guid id);
-        Task<UserViewDTO> GetUserById(Guid id);
-
-    }
 
     public class UserService : IUserService
     {

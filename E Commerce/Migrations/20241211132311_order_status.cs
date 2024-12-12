@@ -5,7 +5,7 @@
 namespace E_Commerce.Migrations
 {
     /// <inheritdoc />
-    public partial class two : Migration
+    public partial class order_status : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

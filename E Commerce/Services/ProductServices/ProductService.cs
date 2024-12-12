@@ -7,19 +7,8 @@ using E_Commerce.Services.CloudinaryServices;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 
-namespace E_Commerce.Services
+namespace E_Commerce.Services.ProductServices
 {
-    public interface IProductService
-    {
-        Task AddProduct(ProductDTO productDTO, IFormFile image);
-        Task<List<ProductGetDTO>> GetProducts();
-        Task<ProductGetDTO> GetProductById(Guid id);
-        Task<List<ProductGetDTO>> GetProductByCategory(string categoryName);
-        Task<bool> DeleteProduct(Guid id);
-        Task UpdateProduct(Guid id, ProductDTO productDto, IFormFile image);
-        Task<List<ProductGetDTO>> SearchProduct(string search);
-        Task<List<ProductGetDTO>> ProductPagination(int pagenumber = 1, int size = 10);
-    }
 
     public class ProductService : IProductService
     {
@@ -78,7 +67,7 @@ namespace E_Commerce.Services
                 var prd = await _context.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.Id == id);
                 if (prd == null)
                 {
-                    return new ProductGetDTO();
+                    return null;
                 }
                 return _mapper.Map<ProductGetDTO>(prd);
             }
@@ -133,14 +122,19 @@ namespace E_Commerce.Services
             try
             {
                 var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
-                var categoryExists = await _context.Categories.FirstOrDefaultAsync(x => x.Name == productDto.CategoryName);
+                var categoryExists = await _context.Categories.FirstOrDefaultAsync(x => x.Id == productDto.CategoryId);
                 if (categoryExists == null)
                 {
                     throw new Exception("Category not found");
                 }
                 if (product != null)
                 {
-                    _mapper.Map<Product>(productDto);
+                    product.Name = productDto.Name;
+                    product.Description = productDto.Description;
+                    product.Stock = productDto.Stock;
+                    product.MRP = productDto.MRP;
+                    product.Price = productDto.Price;
+                    product.CategoryId = productDto.CategoryId;
 
                     if (image != null && image.Length > 0)
                     {
@@ -173,7 +167,7 @@ namespace E_Commerce.Services
 
 
             var products = await _context.Products.Include(x => x.Category)
-                .Where(p => p.Name.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.Name.Contains(searchTerm))
                 .ToListAsync();
 
             return _mapper.Map<List<ProductGetDTO>>(products);
