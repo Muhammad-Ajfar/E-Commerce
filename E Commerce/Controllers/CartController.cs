@@ -60,9 +60,9 @@ namespace E_Commerce.Controllers
                 {
                     return NotFound(new ApiResponses<string>(404, res.Message));
                 }
-                else if (res.StatusCode == 409)
+                else if (res.StatusCode == 400)
                 {
-                    return Conflict(new ApiResponses<string>(409, res.Message));
+                    return Conflict(new ApiResponses<string>(400, res.Message));
                 }
                 return BadRequest(new ApiResponses<string>(400, "Bad request"));
             }

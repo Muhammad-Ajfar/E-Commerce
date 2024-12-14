@@ -165,6 +165,21 @@
             var totalProducts = await _context.OrderItems.Where(oi => oi.Order.Status == "Delivered").SumAsync(oi => oi.Quantity);
             return new ApiResponses<int>(200, "Total products purchased calculated successfully.", totalProducts);
         }
+
+        // Machine Task
+        // Admin: Retrieve orders by status
+        public async Task<ApiResponses<ICollection<OrderGetDTO>>> GetOrderByStatus(string status)
+        {
+            var orders = await _context.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product).Where(o => o.Status == status).ToListAsync();
+
+            if (!orders.Any())
+            {
+                return new ApiResponses<ICollection<OrderGetDTO>>(404, "Not found.");
+            }
+
+            var orderDTOs = _mapper.Map<ICollection<OrderGetDTO>>(orders);
+            return new ApiResponses<ICollection<OrderGetDTO>>(200, $"Orders with status {status} retrieved successfully.", orderDTOs);
+        }
     }
 
 }

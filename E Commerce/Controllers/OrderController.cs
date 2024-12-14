@@ -107,5 +107,15 @@ namespace E_Commerce.Controllers
             var response = await _orderService.GetTotalProductsPurchased();
             return StatusCode(response.StatusCode, response);
         }
+
+        // Machine Task
+        // Admin: View orders by Status
+        [HttpGet("admin/status")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetOrderByStatus(string status)
+        {
+            var response = await _orderService.GetOrderByStatus(status);
+            return StatusCode(response.StatusCode, response);
+        }
     }
 }

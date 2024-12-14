@@ -13,6 +13,9 @@ namespace E_Commerce.Services.OrderServices
         Task<ApiResponses<ICollection<OrderGetDTO>>> GetOrdersByUser(Guid userId);
         Task<ApiResponses<decimal>> GetTotalRevenue();
         Task<ApiResponses<int>> GetTotalProductsPurchased();
+
+        // Machine Task
+        Task<ApiResponses<ICollection<OrderGetDTO>>> GetOrderByStatus(string status);
     }
 
 }
